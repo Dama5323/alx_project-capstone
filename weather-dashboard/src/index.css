@@ -1,7 +1,28 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --color-primary: #3b82f6;
+  --color-primary-dark: #2563eb;
+  --color-sun-glare: #f8fafc; 
+  --color-deep-space: #020617; 
+}
+
+/* Global transitions for a premium feel */
+html, body {
+  @apply transition-colors duration-500 ease-in-out;
+}
+
+/* Light Mode Defaults */
 body {
-  @apply bg-slate-900 text-white antialiased;
+  background-color: var(--color-sun-glare);
+  color: #1e293b; /* slate-800 */
+  min-height: 100vh;
+}
+
+/* Dark Mode Overrides */
+.dark body {
+  background-color: var(--color-deep-space);
+  color: #f8fafc; /* slate-50 */
 }

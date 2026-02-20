@@ -1,163 +1,121 @@
 import React from 'react';
+import { useParams, Link } from 'react-router-dom';
+import { useWeather } from '../hooks/useWeather';
+import WeatherCard from './WeatherCard';
+import ErrorMessage from './ErrorMessage';
 
-const WeatherCard = ({ weatherData, unit, onRefresh }) => {
-  if (!weatherData) return null;
+const WeatherDetails = () => {
+  const { city } = useParams();
+  const { data: weatherData, isLoading, error, refetch } = useWeather(city);
 
-  const {
-    name,
-    main: { temp, humidity, feels_like, temp_min, temp_max },
-    weather,
-    wind: { speed },
-    sys: { country, sunrise, sunset }
-  } = weatherData;
+  if (isLoading) {
+    return (
+      <div className="container mx-auto px-4 py-8 flex justify-center items-center h-64">
+        <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-500"></div>
+      </div>
+    );
+  }
 
-  const weatherCondition = weather[0];
-  const iconUrl = `https://openweathermap.org/img/wn/${weatherCondition.icon}@4x.png`;
-
-  // Format time from timestamp
-  const formatTime = (timestamp) => {
-    return new Date(timestamp * 1000).toLocaleTimeString('en-US', {
-      hour: '2-digit',
-      minute: '2-digit'
-    });
-  };
-
-  // Get background gradient based on weather condition
-  const getWeatherGradient = () => {
-    const condition = weatherCondition.main.toLowerCase();
-    if (condition.includes('clear')) return 'from-yellow-400 to-orange-500';
-    if (condition.includes('cloud')) return 'from-gray-300 to-gray-500';
-    if (condition.includes('rain')) return 'from-blue-400 to-blue-600';
-    if (condition.includes('snow')) return 'from-blue-100 to-blue-300';
-    if (condition.includes('thunder')) return 'from-purple-500 to-purple-700';
-    return 'from-blue-400 to-blue-600';
-  };
-
-  return (
-    <div className="w-full max-w-4xl mx-auto">
-      {/* Main Weather Card */}
-      <div className={`bg-gradient-to-br ${getWeatherGradient()} rounded-2xl shadow-xl overflow-hidden`}>
-        {/* City Header with Refresh Button */}
-        <div className="p-6 bg-black/20 backdrop-blur-sm">
-          <div className="flex flex-col sm:flex-row justify-between items-center">
-            <div className="text-center sm:text-left mb-4 sm:mb-0">
-              <h2 className="text-3xl sm:text-4xl font-bold text-white">
-                {name}, {country}
-              </h2>
-              <p className="text-white/80 text-lg mt-1 capitalize">
-                {weatherCondition.description}
-              </p>
-            </div>
-            {onRefresh && (
-              <button
-                onClick={onRefresh}
-                className="p-2 bg-white/20 hover:bg-white/30 rounded-lg transition-colors"
-                title="Refresh weather data"
-              >
-                <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                </svg>
-              </button>
-            )}
-          </div>
-        </div>
-
-        {/* Weather Details */}
-        <div className="p-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {/* Left Column - Temperature and Icon */}
-            <div className="flex flex-col items-center md:items-start">
-              <div className="flex items-center justify-center md:justify-start w-full">
-                <img 
-                  src={iconUrl} 
-                  alt={weatherCondition.description}
-                  className="w-24 h-24 md:w-32 md:h-32"
-                />
-                <div className="ml-4">
-                  <div className="text-6xl md:text-7xl font-bold text-white">
-                    {Math.round(temp)}°{unit === 'metric' ? 'C' : 'F'}
-                  </div>
-                  <p className="text-white/80 text-lg">
-                    Feels like {Math.round(feels_like)}°
-                  </p>
-                </div>
-              </div>
-              
-              {/* Min/Max Temperature */}
-              <div className="flex gap-4 mt-4 text-white/90">
-                <div className="flex items-center">
-                  <svg className="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 15l7-7 7 7" />
-                  </svg>
-                  <span>H: {Math.round(temp_max)}°</span>
-                </div>
-                <div className="flex items-center">
-                  <svg className="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
-                  </svg>
-                  <span>L: {Math.round(temp_min)}°</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Right Column - Additional Info */}
-            <div className="grid grid-cols-2 gap-4">
-              {/* Humidity */}
-              <div className="bg-white/20 backdrop-blur-sm rounded-xl p-4">
-                <div className="flex items-center text-white/80 mb-2">
-                  <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M20 12H4" />
-                  </svg>
-                  <span className="text-sm">Humidity</span>
-                </div>
-                <p className="text-2xl font-semibold text-white">{humidity}%</p>
-              </div>
-
-              {/* Wind Speed */}
-              <div className="bg-white/20 backdrop-blur-sm rounded-xl p-4">
-                <div className="flex items-center text-white/80 mb-2">
-                  <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                  </svg>
-                  <span className="text-sm">Wind</span>
-                </div>
-                <p className="text-2xl font-semibold text-white">
-                  {speed} {unit === 'metric' ? 'm/s' : 'mph'}
-                </p>
-              </div>
-
-              {/* Sunrise */}
-              <div className="bg-white/20 backdrop-blur-sm rounded-xl p-4">
-                <div className="flex items-center text-white/80 mb-2">
-                  <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707" />
-                  </svg>
-                  <span className="text-sm">Sunrise</span>
-                </div>
-                <p className="text-xl font-semibold text-white">{formatTime(sunrise)}</p>
-              </div>
-
-              {/* Sunset */}
-              <div className="bg-white/20 backdrop-blur-sm rounded-xl p-4">
-                <div className="flex items-center text-white/80 mb-2">
-                  <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
-                  </svg>
-                  <span className="text-sm">Sunset</span>
-                </div>
-                <p className="text-xl font-semibold text-white">{formatTime(sunset)}</p>
-              </div>
-            </div>
-          </div>
+  if (error || !weatherData) {
+    return (
+      <div className="container mx-auto px-4 py-8">
+        <ErrorMessage 
+          message={error?.message || 'Failed to load weather data'} 
+          onRetry={refetch}
+        />
+        <div className="text-center mt-4">
+          <Link to="/" className="inline-block px-6 py-2 bg-blue-500 text-white rounded-lg">
+            Back to Home
+          </Link>
         </div>
       </div>
+    );
+  }
 
-      {/* Last Updated Info */}
-      <p className="text-center text-gray-500 text-sm mt-4">
-        Last updated: {new Date().toLocaleTimeString()}
-      </p>
+  return (
+    <div className="container mx-auto px-4 py-8 max-w-5xl">
+      {/* Navigation */}
+      <Link 
+        to="/" 
+        className="inline-flex items-center text-blue-500 hover:text-blue-600 mb-6 font-medium transition-transform hover:-translate-x-1"
+      >
+        <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" />
+        </svg>
+        Back to Dashboard
+      </Link>
+
+      {/* Main Card */}
+      <WeatherCard 
+        weatherData={weatherData} 
+        unit="metric"
+        onRefresh={refetch}
+        detailed={true}
+      />
+
+      {/* 3-Column Responsive Grid for Health & Environment */}
+      <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        
+        {/* Health Metrics Card (AQI & UV) */}
+        <div className="bg-white dark:bg-gray-800/50 backdrop-blur-md border border-gray-100 dark:border-white/10 rounded-2xl shadow-sm p-6">
+          <h3 className="text-sm font-bold text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-4">Environment</h3>
+          <div className="space-y-6">
+            <div>
+              <div className="flex justify-between items-end mb-1">
+                <span className="text-gray-600 dark:text-gray-300 font-medium">UV Index</span>
+                <span className="text-orange-500 font-bold">High</span>
+              </div>
+              <div className="w-full bg-gray-200 dark:bg-gray-700 h-2 rounded-full overflow-hidden">
+                <div className="bg-orange-500 h-full w-[70%]"></div>
+              </div>
+            </div>
+            <div>
+              <div className="flex justify-between items-end mb-1">
+                <span className="text-gray-600 dark:text-gray-300 font-medium">Air Quality</span>
+                <span className="text-green-500 font-bold">Good</span>
+              </div>
+              <div className="w-full bg-gray-200 dark:bg-gray-700 h-2 rounded-full overflow-hidden">
+                <div className="bg-green-500 h-full w-[20%]"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Detailed Stats Card */}
+        <div className="bg-white dark:bg-gray-800/50 backdrop-blur-md border border-gray-100 dark:border-white/10 rounded-2xl shadow-sm p-6">
+          <h3 className="text-sm font-bold text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-4">Atmosphere</h3>
+          <div className="space-y-4">
+            <StatRow label="Pressure" value={`${weatherData.main.pressure} hPa`} />
+            <StatRow label="Visibility" value={`${(weatherData.visibility / 1000).toFixed(1)} km`} />
+            <StatRow label="Cloudiness" value={`${weatherData.clouds.all}%`} />
+          </div>
+        </div>
+
+        {/* Location Card */}
+        <div className="bg-white dark:bg-gray-800/50 backdrop-blur-md border border-gray-100 dark:border-white/10 rounded-2xl shadow-sm p-6">
+          <h3 className="text-sm font-bold text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-4">Location</h3>
+          <div className="space-y-4">
+            <StatRow label="Latitude" value={`${weatherData.coord.lat}°`} />
+            <StatRow label="Longitude" value={`${weatherData.coord.lon}°`} />
+            <div className="pt-2">
+               <button className="w-full py-2 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-lg text-sm font-bold hover:bg-blue-100 transition-colors">
+                 View on Map
+               </button>
+            </div>
+          </div>
+        </div>
+
+      </div>
     </div>
   );
 };
+
+// Helper component for clean rows
+const StatRow = ({ label, value }) => (
+  <div className="flex justify-between items-center border-b border-gray-50 dark:border-white/5 pb-2">
+    <span className="text-gray-500 dark:text-gray-400 text-sm">{label}</span>
+    <span className="text-gray-800 dark:text-white font-semibold">{value}</span>
+  </div>
+);
 
 export default WeatherDetails;

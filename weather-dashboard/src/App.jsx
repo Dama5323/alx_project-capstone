@@ -1,16 +1,45 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+
+// Components
 import SearchBar from './components/SearchBar';
 import WeatherCard from './components/WeatherCard';
 import ErrorMessage from './components/ErrorMessage';
 import RecentSearches from './components/RecentSearches';
 import UnitToggle from './components/UnitToggle';
+import WeatherDetails from './components/WeatherDetails';
+import Settings from './components/Settings';
+import Favorites from './components/Favorites';
+import ProtectedRoute from './components/ProtectedRoute';
+import Header from './components/Header'; 
+import Login from './components/auth/Login';
+import Signup from './components/auth/Signup';
+import ForgotPassword from './components/auth/ForgotPassword';
+import ProfilePage from './components/profile/ProfilePage';
 
-function App() {
+// Context
+import AuthProvider from './context/AuthContext';
+import { ThemeProvider } from './context/ThemeContext';
+
+// Create QueryClient outside of component to prevent re-creation
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 5 * 60 * 1000,
+      gcTime: 30 * 60 * 1000,
+    },
+  },
+});
+
+// Home Page Component
+const HomePage = () => {
   const [weatherData, setWeatherData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [unit, setUnit] = useState('metric'); // 'metric' for Celsius, 'imperial' for Fahrenheit
+  const [unit, setUnit] = useState('metric');
   const [recentSearches, setRecentSearches] = useState([]);
   const [lastCity, setLastCity] = useState('');
 
@@ -73,7 +102,6 @@ function App() {
     const newUnit = unit === 'metric' ? 'imperial' : 'metric';
     setUnit(newUnit);
     
-    // Refresh weather data with new unit if we have a city
     if (lastCity) {
       fetchWeather(lastCity);
     }
@@ -86,7 +114,7 @@ function App() {
     }
   };
 
-  // Get user's location on load (Stretch Goal)
+  // Get user's location on load
   useEffect(() => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
@@ -107,11 +135,11 @@ function App() {
             saveRecentSearch(response.data.name);
           } catch (err) {
             console.error('Error fetching weather for location:', err);
+            fetchWeather('London');
           }
         },
         (error) => {
           console.log('Geolocation error:', error);
-          // Default to a major city if geolocation fails
           fetchWeather('London');
         }
       );
@@ -121,92 +149,112 @@ function App() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100">
-      {/* Header */}
-      <header className="bg-white/80 backdrop-blur-sm shadow-sm sticky top-0 z-50">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex flex-col sm:flex-row justify-between items-center">
-            <div className="flex items-center space-x-2 mb-4 sm:mb-0">
-              <svg 
-                className="h-8 w-8 text-blue-500" 
-                fill="none" 
-                stroke="currentColor" 
-                viewBox="0 0 24 24"
-              >
-                <path 
-                  strokeLinecap="round" 
-                  strokeLinejoin="round" 
-                  strokeWidth="2" 
-                  d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z" 
-                />
-              </svg>
-              <h1 className="text-2xl font-bold text-gray-800">Weather Dashboard</h1>
-            </div>
-            
-            <UnitToggle unit={unit} onToggle={handleUnitToggle} />
+    <div className="container mx-auto px-4 py-6">
+      {/* Unit Toggle - Moved to top right */}
+      <div className="flex justify-end mb-4">
+        <UnitToggle unit={unit} onToggle={handleUnitToggle} />
+      </div>
+
+      {/* Search Section */}
+      <div className="mb-6">
+        <SearchBar onSearch={fetchWeather} isLoading={loading} />
+        <RecentSearches 
+          searches={recentSearches} 
+          onSelectCity={fetchWeather}
+        />
+      </div>
+
+      {/* Weather Display Section */}
+      <div className="mt-4">
+        {error && <ErrorMessage message={error} onRetry={() => lastCity && fetchWeather(lastCity)} />}
+        
+        {loading && (
+          <div className="flex justify-center items-center h-64">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
           </div>
-        </div>
-      </header>
+        )}
 
-      {/* Main Content */}
-      <main className="container mx-auto px-4 py-8">
-        {/* Search Section */}
-        <div className="mb-8">
-          <SearchBar onSearch={fetchWeather} isLoading={loading} />
-          <RecentSearches 
-            searches={recentSearches} 
-            onSelectCity={fetchWeather}
+        {weatherData && !loading && (
+          <WeatherCard 
+            weatherData={weatherData} 
+            unit={unit}
+            onRefresh={handleRefresh}
           />
-        </div>
+        )}
 
-        {/* Weather Display Section */}
-        <div className="mt-8">
-          {error && <ErrorMessage message={error} onRetry={() => lastCity && fetchWeather(lastCity)} />}
-          
-          {loading && (
-            <div className="flex justify-center items-center h-64">
-              <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-500"></div>
-            </div>
-          )}
-
-          {weatherData && !loading && (
-            <WeatherCard 
-              weatherData={weatherData} 
-              unit={unit}
-              onRefresh={handleRefresh}
-            />
-          )}
-
-          {!weatherData && !loading && !error && (
-            <div className="text-center py-16">
-              <svg 
-                className="mx-auto h-24 w-24 text-gray-400 mb-4" 
-                fill="none" 
-                stroke="currentColor" 
-                viewBox="0 0 24 24"
-              >
-                <path 
-                  strokeLinecap="round" 
-                  strokeLinejoin="round" 
-                  strokeWidth="2" 
-                  d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z" 
-                />
-              </svg>
-              <p className="text-gray-500 text-xl">Search for a city to see weather information</p>
-            </div>
-          )}
-        </div>
-      </main>
-
-      {/* Footer */}
-      <footer className="bg-white border-t mt-16">
-        <div className="container mx-auto px-4 py-6">
-          <p className="text-center text-gray-600">
-            Data provided by OpenWeatherMap • Weather Dashboard © 2026
-          </p>
-        </div>
-      </footer>
+        {!weatherData && !loading && !error && (
+          <div className="text-center py-12 bg-white rounded-xl shadow-md">
+            <svg 
+              className="mx-auto h-16 w-16 text-gray-400 mb-3" 
+              fill="none" 
+              stroke="currentColor" 
+              viewBox="0 0 24 24"
+            >
+              <path 
+                strokeLinecap="round" 
+                strokeLinejoin="round" 
+                strokeWidth="2" 
+                d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z" 
+              />
+            </svg>
+            <p className="text-gray-500 text-lg">Search for a city to see weather information</p>
+          </div>
+        )}
+      </div>
     </div>
+  );
+};
+
+// Root App with Providers
+// Root App with Providers
+function App() {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <AuthProvider>
+        <ThemeProvider> 
+          <Router>
+            <div className="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100 dark:from-gray-900 dark:to-gray-800 transition-colors duration-300">
+              {/* Use the Header component here */}
+              <Header />
+              
+              <main className="container mx-auto px-4 py-4">
+                <Routes>
+                  <Route path="/" element={<HomePage />} />
+                  <Route path="/weather/:city" element={<WeatherDetails />} />
+                  <Route path="/favorites" element={
+                    <ProtectedRoute>
+                      <Favorites />
+                    </ProtectedRoute>
+                  } />
+                  <Route 
+                    path="/profile" 
+                    element={
+                      <ProtectedRoute>
+                        <ProfilePage />
+                      </ProtectedRoute>
+                    } 
+                  />
+                  <Route path="/settings" element={<Settings />} />
+                  <Route path="*" element={<Navigate to="/" replace />} />
+                  <Route path="/login" element={<Login />} />
+                  <Route path="/signup" element={<Signup />} />
+                  <Route path="/forgot-password" element={<ForgotPassword />} />
+                </Routes>
+              </main>
+
+              <footer className="bg-white dark:bg-gray-800 border-t dark:border-gray-700 mt-8 py-4 transition-colors">
+                <div className="container mx-auto px-4 text-center">
+                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                    Data provided by OpenWeatherMap • Weather Dashboard © 2026
+                  </p>
+                </div>
+              </footer>
+            </div>
+          </Router>
+          <ReactQueryDevtools initialIsOpen={false} />
+        </ThemeProvider> {/* This was misplaced */}
+      </AuthProvider>
+    </QueryClientProvider>
   );
 }
 
