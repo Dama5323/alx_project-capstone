@@ -1,6 +1,7 @@
+/** @type {import('postcss').Config} */
 export default {
   plugins: {
-    "@tailwindcss/postcss": {}, // Note the "@tailwindcss/postcss" instead of "tailwindcss"
+    '@tailwindcss/postcss': {}, // This is correct for Tailwind v4
     autoprefixer: {},
   },
 }

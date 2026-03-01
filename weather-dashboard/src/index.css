@@ -3,26 +3,99 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
-  --color-primary: #3b82f6;
-  --color-primary-dark: #2563eb;
-  --color-sun-glare: #f8fafc; 
-  --color-deep-space: #020617; 
+  /* ACCESSIBLE LIGHT: High-contrast slate/stone */
+  --color-bg-light: #F8FAFC;       /* Slate 50: Clean, reduces eye strain */
+  --color-card-light: #FFFFFF;     /* Pure white for depth */
+  --color-text-light: #0F172A;     /* Slate 900: Deep contrast for readability */
+
+  /* ACCESSIBLE DARK: "Rich Midnight" instead of flat black */
+  --color-bg-dark: #0F172A;        /* Slate 900: Deep blue-black */
+  --color-card-dark: #1E293B;      /* Slate 800: Distinct from BG for hierarchy */
+  --color-text-dark: #F1F5F9;      /* Slate 100: Soft white to prevent "halo" effect */
+  
+  /* ACCESSIBLE ACCENTS */
+  --color-accent-sun: #B45309;     /* Amber 700: Dark enough to be readable on light BG */
+  --color-accent-rain: #1D4ED8;    /* Blue 700: Strong contrast for links/icons */
+}
+
+/* Update your index.css */
+.city-glow {
+  text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
+.hover-lift {
+  @apply transition-transform duration-300 ease-out;
+}
+
+.hover-lift:hover {
+  transform: translateY(-4px);
+  @apply shadow-lg;
 }
 
 /* Global transitions for a premium feel */
 html, body {
-  @apply transition-colors duration-500 ease-in-out;
+  transition: background-color 0.5s ease-in-out, color 0.5s ease-in-out;
 }
 
-/* Light Mode Defaults */
+/* Light Mode Defaults - ONLY ONE DECLARATION */
 body {
-  background-color: var(--color-sun-glare);
-  color: #1e293b; /* slate-800 */
+  background-color: var(--color-bg-light); /* Using the variable you defined */
+  color: var(--color-text-light); /* Using the variable you defined */
   min-height: 100vh;
 }
 
 /* Dark Mode Overrides */
 .dark body {
-  background-color: var(--color-deep-space);
-  color: #f8fafc; /* slate-50 */
+  background-color: var(--color-bg-dark);
+  color: var(--color-text-dark);
+}
+
+@keyframes slide-in-right {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.animate-slide-in-right {
+  animation: slide-in-right 0.3s ease-out;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.3s ease-out;
+}
+
+/* Add to index.css */
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0px); }
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes pulse-soft {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.8; }
+}
+
+.animate-pulse-soft {
+  animation: pulse-soft 2s ease-in-out infinite;
 }

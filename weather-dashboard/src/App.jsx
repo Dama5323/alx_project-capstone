@@ -19,12 +19,12 @@ import Login from './components/auth/Login';
 import Signup from './components/auth/Signup';
 import ForgotPassword from './components/auth/ForgotPassword';
 import ProfilePage from './components/profile/ProfilePage';
+import ComparisonMode from './components/ComparisonMode';
+import ErrorBoundary from './components/ErrorBoundary';
 
 // Context
 import AuthProvider from './context/AuthContext';
 import { ThemeProvider } from './context/ThemeContext';
-
-//
 
 import HomePage from './pages/HomePage';
 
@@ -38,7 +38,6 @@ const queryClient = new QueryClient({
   },
 });
 
-
 // Root App with Providers
 function App() {
   return (
@@ -47,32 +46,38 @@ function App() {
         <ThemeProvider> 
           <Router>
             <div className="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100 dark:from-gray-900 dark:to-gray-800 transition-colors duration-300">
-              {/* Use the Header component here */}
               <Header />
               
               <main className="container mx-auto px-4 py-4">
-                <Routes>
-                  <Route path="/" element={<HomePage />} />
-                  <Route path="/weather/:city" element={<WeatherDetails />} />
-                  <Route path="/favorites" element={
-                    <ProtectedRoute>
-                      <Favorites />
-                    </ProtectedRoute>
-                  } />
-                  <Route 
-                    path="/profile" 
-                    element={
-                      <ProtectedRoute>
-                        <ProfilePage />
-                      </ProtectedRoute>
-                    } 
-                  />
-                  <Route path="/settings" element={<Settings />} />
-                  <Route path="*" element={<Navigate to="/" replace />} />
-                  <Route path="/login" element={<Login />} />
-                  <Route path="/signup" element={<Signup />} />
-                  <Route path="/forgot-password" element={<ForgotPassword />} />
-                </Routes>
+                {/* Wrap Routes with ErrorBoundary */}
+                <ErrorBoundary>
+                  <Routes>
+                    <Route path="/" element={<HomePage />} />
+                    <Route path="/weather/:city" element={<WeatherDetails />} />
+                    <Route 
+                      path="/favorites" 
+                      element={
+                        <ProtectedRoute>
+                          <Favorites />
+                        </ProtectedRoute>
+                      } 
+                    />
+                    <Route 
+                      path="/profile" 
+                      element={
+                        <ProtectedRoute>
+                          <ProfilePage />
+                        </ProtectedRoute>
+                      } 
+                    />
+                    <Route path="/settings" element={<Settings />} />
+                    <Route path="*" element={<Navigate to="/" replace />} />
+                    <Route path="/login" element={<Login />} />
+                    <Route path="/signup" element={<Signup />} />
+                    <Route path="/forgot-password" element={<ForgotPassword />} />
+                    <Route path="/compare" element={<ComparisonMode />} />
+                  </Routes>
+                </ErrorBoundary>
               </main>
 
               <footer className="bg-white dark:bg-gray-800 border-t dark:border-gray-700 mt-8 py-4 transition-colors">
@@ -85,7 +90,7 @@ function App() {
             </div>
           </Router>
           <ReactQueryDevtools initialIsOpen={false} />
-        </ThemeProvider> {/* This was misplaced */}
+        </ThemeProvider> 
       </AuthProvider>
     </QueryClientProvider>
   );

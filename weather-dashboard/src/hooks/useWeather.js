@@ -1,56 +1,47 @@
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+// src/hooks/useWeather.js
+import { useState, useEffect } from 'react';
 import axios from 'axios';
 
-const API_KEY = import.meta.env.VITE_WEATHER_API_KEY;
-const BASE_URL = 'https://api.openweathermap.org/data/2.5/weather';
+export const useWeather = (location, unit) => {
+  const [data, setData] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
 
-const fetchWeather = async ({ queryKey }) => {
-  const [, city, unit] = queryKey;
-  
-  if (!city) return null;
-  
-  try {
-    const response = await axios.get(BASE_URL, {
-      params: {
-        q: city,
-        appid: API_KEY,
-        units: unit
+  useEffect(() => {
+    const fetchWeather = async () => {
+      if (!location) return;
+      
+      setIsLoading(true);
+      setError(null);
+      
+      try {
+        let url;
+        // Check if location is coordinates (has lat and lon)
+        if (typeof location === 'object' && location.lat && location.lon) {
+          url = `https://api.openweathermap.org/data/2.5/weather?lat=${location.lat}&lon=${location.lon}&appid=${import.meta.env.VITE_WEATHER_API_KEY}&units=${unit}`;
+        } else {
+          // Otherwise treat as city name
+          url = `https://api.openweathermap.org/data/2.5/weather?q=${location}&appid=${import.meta.env.VITE_WEATHER_API_KEY}&units=${unit}`;
+        }
+        
+        const response = await axios.get(url);
+        setData(response.data);
+      } catch (err) {
+        const errorMessage = err.response?.data?.message || err.message || 'Failed to fetch weather data';
+        setError(errorMessage);
+        setData(null);
+      } finally {
+        setIsLoading(false);
       }
-    });
-    return response.data;
-  } catch (error) {
-    if (error.response?.status === 404) {
-      throw new Error(`City "${city}" not found. Please check the spelling.`);
-    }
-    throw new Error('Failed to fetch weather data. Please try again.');
-  }
-};
+    };
 
-export const useWeather = (city, unit = 'metric') => {
-  const queryClient = useQueryClient();
+    fetchWeather();
+  }, [location, unit]);
 
-  const query = useQuery({
-    queryKey: ['weather', city, unit],
-    queryFn: fetchWeather,
-    enabled: !!city, // Only run if city is provided
-    staleTime: 5 * 60 * 1000, // Consider data stale after 5 minutes
-    cacheTime: 30 * 60 * 1000, // Keep in cache for 30 minutes
-    retry: 1, // Only retry once on failure
-    refetchOnWindowFocus: false, // Don't refetch when window gains focus
-  });
-
-  const prefetchCity = async (cityToPrefetch) => {
-    if (cityToPrefetch && cityToPrefetch !== city) {
-      await queryClient.prefetchQuery({
-        queryKey: ['weather', cityToPrefetch, unit],
-        queryFn: fetchWeather,
-        staleTime: 5 * 60 * 1000,
-      });
-    }
+  const refetch = () => {
+    setIsLoading(true);
+    setError(null);
   };
 
-  return {
-    ...query,
-    prefetchCity
-  };
+  return { data, isLoading, error, refetch };
 };

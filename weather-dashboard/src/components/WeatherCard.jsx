@@ -36,6 +36,10 @@ const WeatherCard = ({ weatherData, unit, onRefresh, detailed = false, lastUpdat
     return 'from-blue-400 to-blue-600 dark:from-blue-700 dark:to-blue-900';
   };
 
+  // Get display location name
+  const displayName = name || 'Your Location';
+  const displayCountry = country || '';
+
   return (
     <div className="w-full max-w-4xl mx-auto">
       {/* Main Weather Card */}
@@ -44,8 +48,8 @@ const WeatherCard = ({ weatherData, unit, onRefresh, detailed = false, lastUpdat
         <div className="p-4 md:p-6 bg-black/20 dark:bg-black/40 backdrop-blur-sm">
           <div className="flex flex-col sm:flex-row justify-between items-center">
             <div className="text-center sm:text-left mb-3 sm:mb-0">
-              <h2 className="text-2xl md:text-3xl font-bold text-white">
-                {name}, {country}
+              <h2 className="text-2xl md:text-3xl font-bold text-white city-glow">
+                {displayName}{displayCountry ? `, ${displayCountry}` : ''}
               </h2>
               <p className="text-white/80 text-base md:text-lg mt-1 capitalize">
                 {weatherCondition.description}
@@ -54,7 +58,7 @@ const WeatherCard = ({ weatherData, unit, onRefresh, detailed = false, lastUpdat
             {onRefresh && (
               <button
                 onClick={onRefresh}
-                className="p-2 bg-white/20 hover:bg-white/30 dark:bg-black/20 dark:hover:bg-black/30 rounded-lg transition-colors"
+                className="p-2 bg-white/20 hover:bg-white/30 dark:bg-black/20 dark:hover:bg-black/30 rounded-lg transition-colors button-press"
                 title="Refresh weather data"
               >
                 <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -88,13 +92,13 @@ const WeatherCard = ({ weatherData, unit, onRefresh, detailed = false, lastUpdat
               
               {/* Min/Max Temperature */}
               <div className="flex gap-4 mt-3 text-white/90 text-sm md:text-base">
-                <div className="flex items-center">
+                <div className="flex items-center bg-white/20 dark:bg-black/30 backdrop-blur-sm px-3 py-1 rounded-full">
                   <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 15l7-7 7 7" />
                   </svg>
                   <span>H: {Math.round(temp_max)}°</span>
                 </div>
-                <div className="flex items-center">
+                <div className="flex items-center bg-white/20 dark:bg-black/30 backdrop-blur-sm px-3 py-1 rounded-full">
                   <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
                   </svg>
@@ -106,7 +110,7 @@ const WeatherCard = ({ weatherData, unit, onRefresh, detailed = false, lastUpdat
             {/* Right Column - Additional Info */}
             <div className="flex-1 grid grid-cols-2 gap-3">
               {/* Humidity */}
-              <div className="bg-white/20 dark:bg-black/30 backdrop-blur-sm rounded-xl p-3">
+              <div className="bg-white/20 dark:bg-black/30 backdrop-blur-sm rounded-xl p-3 hover-lift">
                 <div className="flex items-center text-white/80 mb-1">
                   <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M20 12H4" />
@@ -117,7 +121,7 @@ const WeatherCard = ({ weatherData, unit, onRefresh, detailed = false, lastUpdat
               </div>
 
               {/* Wind Speed */}
-              <div className="bg-white/20 dark:bg-black/30 backdrop-blur-sm rounded-xl p-3">
+              <div className="bg-white/20 dark:bg-black/30 backdrop-blur-sm rounded-xl p-3 hover-lift">
                 <div className="flex items-center text-white/80 mb-1">
                   <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
@@ -132,7 +136,7 @@ const WeatherCard = ({ weatherData, unit, onRefresh, detailed = false, lastUpdat
               {/* Sunrise - only show on detailed view or if space permits */}
               {(detailed || window.innerWidth > 768) && (
                 <>
-                  <div className="bg-white/20 dark:bg-black/30 backdrop-blur-sm rounded-xl p-3">
+                  <div className="bg-white/20 dark:bg-black/30 backdrop-blur-sm rounded-xl p-3 hover-lift">
                     <div className="flex items-center text-white/80 mb-1">
                       <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707" />
@@ -142,7 +146,7 @@ const WeatherCard = ({ weatherData, unit, onRefresh, detailed = false, lastUpdat
                     <p className="text-lg font-semibold text-white">{formatTime(sunrise)}</p>
                   </div>
 
-                  <div className="bg-white/20 dark:bg-black/30 backdrop-blur-sm rounded-xl p-3">
+                  <div className="bg-white/20 dark:bg-black/30 backdrop-blur-sm rounded-xl p-3 hover-lift">
                     <div className="flex items-center text-white/80 mb-1">
                       <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
@@ -160,7 +164,7 @@ const WeatherCard = ({ weatherData, unit, onRefresh, detailed = false, lastUpdat
 
       {/* Last Updated Info */}
       {lastUpdated && (
-        <p className="text-center text-gray-500 dark:text-gray-400 text-xs mt-2">
+        <p className="text-center text-gray-500 dark:text-gray-400 text-xs mt-2 animate-pulse-soft">
           Last updated: {lastUpdated}
         </p>
       )}

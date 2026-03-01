@@ -1,24 +1,38 @@
+// src/components/ErrorMessage.jsx
 import React from 'react';
 
 const ErrorMessage = ({ message, onRetry }) => {
+  // Safely convert message to string
+  const displayMessage = typeof message === 'object' 
+    ? message?.message || 'An unexpected error occurred' 
+    : message || 'An unexpected error occurred';
+
   return (
-    <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-6 max-w-md mx-auto">
-      <div className="flex flex-col items-center text-center">
+    <div className="p-6 bg-red-50 dark:bg-red-900/20 rounded-2xl text-center animate-shake">
+      <div className="flex flex-col items-center gap-3">
+        {/* Error Icon */}
         <svg 
-          className="w-16 h-16 text-red-500 dark:text-red-400 mb-4" 
-          fill="currentColor" 
-          viewBox="0 0 20 20"
+          className="w-12 h-12 text-red-500 dark:text-red-400" 
+          fill="none" 
+          stroke="currentColor" 
+          viewBox="0 0 24 24"
         >
-          <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+          <path 
+            strokeLinecap="round" 
+            strokeLinejoin="round" 
+            strokeWidth="2" 
+            d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" 
+          />
         </svg>
-        <h3 className="text-lg font-semibold text-red-800 dark:text-red-400 mb-2">
-          Oops! Something went wrong
-        </h3>
-        <p className="text-red-600 dark:text-red-300 mb-4">{message}</p>
+        
+        <p className="text-red-600 dark:text-red-400 font-semibold">
+          {displayMessage}
+        </p>
+        
         {onRetry && (
-          <button 
+          <button
             onClick={onRetry}
-            className="px-4 py-2 bg-red-500 hover:bg-red-600 dark:bg-red-700 dark:hover:bg-red-600 text-white rounded-lg transition-colors"
+            className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors button-press"
           >
             Try Again
           </button>
