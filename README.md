@@ -7,7 +7,11 @@
 ![Tailwind](https://img.shields.io/badge/Tailwind-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
 ![Vercel](https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white)
 
-![Weather Dashboard](./weather_dashboard.png)
+### Language Breakdown
+
+![JavaScript](https://img.shields.io/badge/JavaScript-97.3%25-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)
+![CSS](https://img.shields.io/badge/CSS-2.2%25-1572B6?style=for-the-badge&logo=css3&logoColor=white)
+![HTML](https://img.shields.io/badge/HTML-0.5%25-E34F26?style=for-the-badge&logo=html5&logoColor=white)
 
 ## 📋 Table of Contents
 
