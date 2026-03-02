@@ -7,6 +7,8 @@
 ![Tailwind](https://img.shields.io/badge/Tailwind-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
 ![Vercel](https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white)
 
+![Weather Dashboard](./weather_dashboard.png)
+
 ## 📋 Table of Contents
 
 - [Overview](#overview)
@@ -34,10 +36,6 @@ The application solves the problem of generic weather forecasts by delivering pe
 ## 🔗 Live Demo
 
 [https://alx-weatherdash.vercel.app/](https://alx-weatherdash.vercel.app/)
-
-## 📸 Screenshot
-
-![Weather Dashboard](./weather_dashboard.png)
 
 ## ✨ Features
 
