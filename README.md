@@ -1,6 +1,6 @@
 # 🌤️ Weather Dashboard - ALX Capstone Project
 
-## 🏷️ Built With
+## Built With
 
 ![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
 ![Vite](https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white)
@@ -32,17 +32,17 @@
 - [License](#license)
 - [Acknowledgements](#acknowledgements)
 
-## 🌟 Overview
+## Overview
 
 Weather Dashboard is a responsive, feature-rich web application built as my ALX Frontend Capstone Project. It provides users with hyper-local, actionable weather information through an intuitive interface with smart features like voice search, city comparison, and AI-powered outfit recommendations.
 
 The application solves the problem of generic weather forecasts by delivering personalized, context-aware weather data that helps users plan their day effectively—whether they're in a major city or a small town.
 
-## 🔗 Live Demo
+## Live Demo
 
 [https://alx-weatherdash.vercel.app/](https://alx-weatherdash.vercel.app/)
 
-## ✨ Features
+##  Features
 
 ### 🎨 Core Features
 
@@ -68,7 +68,7 @@ The application solves the problem of generic weather forecasts by delivering pe
 | **⚠️ Error Handling** | User-friendly error messages with retry options |
 | **📱 Responsive Design** | Optimized for mobile, tablet, and desktop |
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 ### Frontend
 
@@ -99,7 +99,7 @@ The application solves the problem of generic weather forecasts by delivering pe
 - **Vitest** - Unit testing
 - **ESLint** - Code linting
 
-## 💻 Installation
+## Installation
 
 ### Prerequisites
 
@@ -141,7 +141,7 @@ npm run dev
 Open your browser and navigate to http://localhost:3000
 ```
 
-## 🔧 Configuration
+## Configuration
 
 ### 🔧 Environment Variables
 
@@ -164,7 +164,7 @@ The project uses Tailwind CSS v4 with custom theming. Key configurations in inde
 }
 ``` 
 
-## 📖 Usage Guide
+## Usage Guide
 Getting Started
 1. Allow location access when prompted for auto-detection
 
@@ -219,7 +219,7 @@ Getting Started
 
 - Quickly switch between saved locations
 
-## 🔧 Feature Details
+## Feature Details
 
 ### Smart Notifications System
 
@@ -257,7 +257,7 @@ Uses the Web Speech API with:
 - Error handling for unsupported browsers
 - Fallback to manual search
 
-## 🔌 API Integration
+## API Integration
 
 ### OpenWeatherMap Endpoints
 
@@ -267,7 +267,7 @@ Uses the Web Speech API with:
 | `forecast` | 5-day forecast (3-hour intervals) | `q={city}` or `lat={lat}&lon={lon}` |
 | `geo/1.0/reverse` | Reverse geocoding | `lat={lat}&lon={lon}` |
 
-## 📁 Project Structure
+## Project Structure
 ```
 weather-dashboard/
 ├── public/                      # Static assets
@@ -317,7 +317,7 @@ weather-dashboard/
 ```
 
 
-## 🧠 Challenges & Solutions
+## Challenges & Solutions
 
 ### Challenge 1: "City Not Found" for Small Towns
 
@@ -372,7 +372,7 @@ weather-dashboard/
 - Added caching for forecast data
 - Reduced unnecessary refetches on unit toggle
 
-## 🚀 Future Enhancements
+## Future Enhancements
 
 ### Short-term (Next Sprint)
 
@@ -395,7 +395,7 @@ weather-dashboard/
 - **Weather Alerts by Email** - Customizable alerts
 - **Internationalization** - Support for multiple languages
 
-## 🤝 Contributing
+## Contributing
 
 Contributions are welcome! Here's how you can help:
 
@@ -431,7 +431,7 @@ git push origin feature/amazing-featur
 
 - Use conventional commit messages
 
-## 🙏 Acknowledgements
+## Acknowledgements
 
 - **ALX Africa** - For the comprehensive frontend program
 - **OpenWeatherMap** - For providing the weather API
@@ -440,7 +440,7 @@ git push origin feature/amazing-featur
 - **Vercel** - For free hosting and deployment
 - **My Mentors & Peers** - For guidance and support
 
-## 📞 Contact
+## Contact
 
 **Damaris Chege**
 
@@ -448,7 +448,7 @@ git push origin feature/amazing-featur
 - Project Link: [https://github.com/Dama5323/alx_project-capstone](https://github.com/Dama5323/alx_project-capstone)
 - Live Demo: [https://alx-weatherdash.vercel.app/](https://alx-weatherdash.vercel.app/)
 
-## 🏆 Final Thoughts
+## Final Thoughts
 
 This Weather Dashboard represents weeks of learning, problem-solving, and iteration. From the initial concept of a simple weather app to a full-featured dashboard with voice search, AI outfit recommendations, and city comparison—it's been an incredible journey.
 
