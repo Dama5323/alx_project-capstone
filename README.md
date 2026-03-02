@@ -263,6 +263,7 @@ Uses the Web Speech API with:
 | `geo/1.0/reverse` | Reverse geocoding | `lat={lat}&lon={lon}` |
 
 ## 📁 Project Structure
+```
 weather-dashboard/
 ├── public/                      # Static assets
 ├── src/
@@ -308,6 +309,7 @@ weather-dashboard/
 ├── tailwind.config.js             # Tailwind config
 ├── vite.config.js                 # Vite config
 └── README.md                      # Project documentation
+```
 
 
 ## 🧠 Challenges & Solutions
