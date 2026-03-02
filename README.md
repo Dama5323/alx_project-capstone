@@ -264,9 +264,9 @@ Uses the Web Speech API with:
 
 ## 📁 Project Structure
 weather-dashboard/
-├── public/                 # Static assets
+├── public/                      # Static assets
 ├── src/
-│   ├── components/         # Reusable UI components
+│   ├── components/              # Reusable UI components
 │   │   ├── ComparisonMode.jsx
 │   │   ├── ErrorBoundary.jsx
 │   │   ├── ErrorMessage.jsx
@@ -281,33 +281,33 @@ weather-dashboard/
 │   │   ├── VoiceSearchButton.jsx
 │   │   ├── WeatherCard.jsx
 │   │   ├── WeatherDetails.jsx
-│   │   └── auth/           # Authentication components
-│   ├── context/            # React Context providers
+│   │   └── auth/                # Authentication components
+│   ├── context/                  # React Context providers
 │   │   ├── AuthContext.js
 │   │   └── ThemeContext.js
-│   ├── hooks/              # Custom React hooks
+│   ├── hooks/                    # Custom React hooks
 │   │   ├── useGeolocation.js
 │   │   ├── useWeather.js
 │   │   └── useWeatherNotifications.js
-│   ├── pages/              # Page components
+│   ├── pages/                    # Page components
 │   │   └── HomePage.jsx
-│   ├── services/           # API services
+│   ├── services/                 # API services
 │   │   ├── forecastService.js
 │   │   └── weatherService.js
-│   ├── utils/              # Utility functions
+│   ├── utils/                    # Utility functions
 │   │   ├── locationUtils.js
 │   │   └── outfitAdvisor.js
-│   ├── App.js              # Main app component
-│   ├── index.css           # Global styles (Tailwind)
-│   └── main.jsx            # Entry point
-├── .env.example             # Environment variables template
-├── .gitignore               # Git ignore file
-├── index.html               # HTML template
-├── package.json             # Dependencies
-├── postcss.config.js        # PostCSS config
-├── tailwind.config.js       # Tailwind config
-├── vite.config.js           # Vite config
-└── README.md                # Project documentation
+│   ├── App.js                    # Main app component
+│   ├── index.css                 # Global styles (Tailwind)
+│   └── main.jsx                  # Entry point
+├── .env.example                   # Environment variables template
+├── .gitignore                     # Git ignore file
+├── index.html                     # HTML template
+├── package.json                   # Dependencies
+├── postcss.config.js              # PostCSS config
+├── tailwind.config.js             # Tailwind config
+├── vite.config.js                 # Vite config
+└── README.md                      # Project documentation
 
 
 ## 🧠 Challenges & Solutions
