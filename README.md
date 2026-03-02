@@ -35,6 +35,10 @@ The application solves the problem of generic weather forecasts by delivering pe
 
 [https://alx-weatherdash.vercel.app/](https://alx-weatherdash.vercel.app/)
 
+## 📸 Screenshot
+
+![Weather Dashboard](./weather_dashboard.png)
+
 ## ✨ Features
 
 ### 🎨 Core Features
